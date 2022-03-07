@@ -1,31 +1,44 @@
 import {
-  companies,
   Company,
+  CompanyNewRequest,
   ErrorResponse,
   errorResponse,
+  getAllCompanies,
   HttpStatusCode,
-  isCompany,
+  isCompanyNewRequest,
   prepareNewCompanyEntity,
+  saveCompany,
 } from '../../../data';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Company[] | Company | ErrorResponse>) {
-  let { company } = req.body as { company: Partial<Company> | undefined };
   try {
     if (req.method === 'POST') {
+      let { company } = req.body as { company: Partial<CompanyNewRequest> | undefined };
       // Process a POST request
-      if (!isCompany(company)) {
-        res.status(HttpStatusCode.BAD_REQUEST).json(req.body);
+      if (!isCompanyNewRequest(company)) {
+        res.status(HttpStatusCode.BAD_REQUEST).json(errorResponse(`Bad request`));
         return;
       }
 
-      const preparedCompany = await prepareNewCompanyEntity(company);
-      companies.push(preparedCompany);
-      res.status(HttpStatusCode.OK).json(company);
-    } else {
-      // Handle any other HTTP method
-      res.status(HttpStatusCode.OK).json(companies);
+      const preparedCompany: Company = await prepareNewCompanyEntity(company);
+      const savedCompany = await saveCompany(preparedCompany);
+      if (savedCompany !== undefined) {
+        res.status(HttpStatusCode.OK).json(savedCompany);
+      } else {
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(errorResponse('Error saving company'));
+      }
+      return;
     }
+
+    if (req.method === 'GET') {
+      // Handle any other HTTP method
+      const companies = await getAllCompanies();
+      res.status(HttpStatusCode.OK).json(companies);
+      return;
+    }
+
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED).json(errorResponse(`Method is not allow`));
   } catch (err) {
     res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(errorResponse((err as Error).message));
   }
