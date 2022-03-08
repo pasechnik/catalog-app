@@ -1,0 +1,12 @@
+.container {
+  padding: 2rem 2rem;
+}
+
+.main {
+}
+
+.tag {
+  font-weight: bold;
+  text-decoration: underline;
+  padding: 0px 6px 0px 0px;
+}

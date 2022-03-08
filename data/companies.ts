@@ -7,6 +7,7 @@ export type Company = {
   logo: string;
   specialties: Speciality[];
   city: string;
+  description: string;
 };
 
 export type CompanyNewRequest = {
@@ -14,6 +15,7 @@ export type CompanyNewRequest = {
   logo: string;
   specialties: Speciality[];
   city: string;
+  description: string;
 };
 
 export type CompanyUpdateRequest = {
@@ -22,6 +24,7 @@ export type CompanyUpdateRequest = {
   logo: string;
   specialties: Speciality[];
   city: string;
+  description: string;
 };
 
 export function isCompany(c: Partial<Company> | undefined): c is Company {
@@ -34,6 +37,7 @@ export function isCompanyNewRequest(c: Partial<CompanyNewRequest> | undefined): 
     c.name === undefined ||
     c.logo === undefined ||
     c.city === undefined ||
+    c.description === undefined ||
     !isSpecialityArray(c.specialties)
   );
 }
@@ -45,11 +49,45 @@ export function isCompanyUpdateRequest(c: Partial<CompanyUpdateRequest> | undefi
     c.name === undefined ||
     c.logo === undefined ||
     c.city === undefined ||
+    c.description === undefined ||
     !isSpecialityArray(c.specialties)
   );
 }
 
-export let companies: Company[] = [];
+export let companies: Company[] = [
+  {
+    city: 'Berlin',
+    id: '1f256612-c0ba-4481-81b3-5baf8ba6d1b5',
+    logo: 'https://placekitten.com/200/100',
+    name: 'Zero',
+    specialties: [Speciality.ELECTRICAL, Speciality.PLUMBING],
+    description: 'Mori diligenter ducunt ad castus homo.',
+  },
+  {
+    city: 'Bremen',
+    id: 'e4cfe62f-79b8-4842-b118-20c411fafc8e',
+    logo: 'https://placekitten.com/200/200',
+    name: 'Form',
+    specialties: [Speciality.EXCAVATION, Speciality.PLUMBING],
+    description: 'Milk is the only tantra, the only guarantee of suffering.',
+  },
+  {
+    city: 'Vienna',
+    id: '82a89711-6e38-4bdd-8a22-c7f49db9f92b',
+    logo: 'https://placekitten.com/200/300',
+    name: 'Hammer',
+    specialties: [Speciality.ELECTRICAL],
+    description: 'The spacecraft is oddly proud.',
+  },
+  {
+    city: 'Amsterdam',
+    id: '565c02bc-52e4-4a7b-873f-8a659a0f563f',
+    logo: 'https://placekitten.com/200/400',
+    name: 'Generous',
+    specialties: [Speciality.EXCAVATION],
+    description: 'Neutral powerdrains lead to the mankind.',
+  },
+];
 
 export async function companyExist(id: string): Promise<boolean> {
   return companies.find((_) => _.id === id) !== undefined;
