@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { alpha, styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -67,9 +68,11 @@ export default function ToolbarComponent({ q, onChange }: ToolbarComponentProps)
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky">
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
+          <Link href="/" passHref>
+            <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+          </Link>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
             CONSTRUCTION{q ? `: ${q.toUpperCase()}` : ''}
           </Typography>
