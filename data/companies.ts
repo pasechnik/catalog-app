@@ -97,8 +97,14 @@ export async function getCompany(id: string): Promise<Company | undefined> {
   return companies.find((_) => _.id === id);
 }
 
-export async function getAllCompanies(): Promise<Company[]> {
-  return [...companies];
+export async function getAllCompanies(q: string | string[]): Promise<Company[]> {
+  const q0 = Array.isArray(q) ? q[0] : q;
+
+  if (q === undefined || q0.length === 0) {
+    return [...companies];
+  }
+
+  return companies.filter((_) => (q0.length ? _.name.search(new RegExp(q0, 'i')) !== -1 : true));
 }
 
 export async function saveCompany(company: Company): Promise<Company | undefined> {

@@ -64,12 +64,15 @@ export default function CompaniesIndex() {
   const { data, error } = useSWR<Company[], unknown>(q.length ? `/api/companies?q=${q}` : `/api/companies`, fetcher);
 
   function onChange(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void {
-    setQ(event.target.value);
+    if (event.target.value !== q) {
+      setQ(event.target.value);
+    }
   }
 
   if (error) return <div>Failed to load</div>;
   if (!data) return <div>Loading...</div>;
 
+  // .filter((_) => (q.length ? _.name.search(new RegExp(q, 'i')) !== -1 : true))
   return (
     <>
       <Head>
@@ -100,20 +103,18 @@ export default function CompaniesIndex() {
       </Box>
       <div className={styles.container}>
         <Grid container spacing={2}>
-          {data
-            .filter((_) => (q.length ? _.name.search(new RegExp(q, 'i')) !== -1 : true))
-            .map(({ id, name, logo, city, specialties, description }) => (
-              <Grid key={`CompanyCard_${id}`} item xs={4}>
-                <CompanyCard
-                  id={id}
-                  name={name}
-                  logo={logo}
-                  city={city}
-                  description={description}
-                  specialties={specialties}
-                />
-              </Grid>
-            ))}
+          {data.map(({ id, name, logo, city, specialties, description }) => (
+            <Grid key={`CompanyCard_${id}`} item xs={4}>
+              <CompanyCard
+                id={id}
+                name={name}
+                logo={logo}
+                city={city}
+                description={description}
+                specialties={specialties}
+              />
+            </Grid>
+          ))}
         </Grid>
       </div>
     </>

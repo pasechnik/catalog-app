@@ -33,7 +33,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     if (req.method === 'GET') {
       // Handle any other HTTP method
-      const companies = await getAllCompanies();
+      const { q } = req.query;
+      const companies = await getAllCompanies(q);
       res.status(HttpStatusCode.OK).json(companies);
       return;
     }
