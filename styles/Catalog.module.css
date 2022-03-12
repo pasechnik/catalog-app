@@ -10,3 +10,23 @@
   text-decoration: underline;
   padding: 0px 6px 0px 0px;
 }
+
+
+.toolbox {
+  padding: 20px
+}
+
+.list {
+  padding-left:10px;
+}
+
+.listItem {
+  color: #0070f3;
+  list-style-type: none;
+}
+
+.listItem:hover {
+  color: #0070f3;
+  text-decoration: underline;
+  list-style-type: none;
+}

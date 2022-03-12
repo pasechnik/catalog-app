@@ -30,6 +30,13 @@ const Home: NextPage = () => {
               <a>Construction companies</a>
             </Link>
           </div>
+
+          <div className={styles.card}>
+            <h2>BlogPost UI &rarr;</h2>
+            <Link href="/blog">
+              <a>Simple blogs UI</a>
+            </Link>
+          </div>
         </div>
       </main>
 
