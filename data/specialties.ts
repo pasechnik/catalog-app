@@ -4,6 +4,13 @@ export enum Speciality {
   ELECTRICAL = 'electrical',
 }
 
+export type SpecialtyFiltersType = { [key in Speciality]: boolean };
+export const specialtyFilters: SpecialtyFiltersType = {
+  [Speciality.EXCAVATION]: false,
+  [Speciality.PLUMBING]: false,
+  [Speciality.ELECTRICAL]: false,
+};
+
 export function isSpeciality(c: string | undefined): c is Speciality {
   if (c === undefined) {
     return false;

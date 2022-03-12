@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { isSpecialityArray, Speciality } from './specialties';
+import { isSpeciality, isSpecialityArray, Speciality } from './specialties';
 
 export type Company = {
   id: string;
@@ -97,14 +97,31 @@ export async function getCompany(id: string): Promise<Company | undefined> {
   return companies.find((_) => _.id === id);
 }
 
-export async function getAllCompanies(q: string | string[]): Promise<Company[]> {
+export async function getAllCompanies(
+  q: string | string[] | undefined,
+  filter: string | string[] | undefined
+): Promise<Company[]> {
+  let result = [...companies];
   const q0 = Array.isArray(q) ? q[0] : q;
 
-  if (q === undefined || q0.length === 0) {
-    return [...companies];
+  if (q0 !== undefined && q0.length > 0) {
+    result = result.filter((_) => (q0.length ? _.name.search(new RegExp(q0, 'i')) !== -1 : true));
   }
 
-  return companies.filter((_) => (q0.length ? _.name.search(new RegExp(q0, 'i')) !== -1 : true));
+  if (
+    filter !== undefined &&
+    Array.isArray(filter) &&
+    isSpecialityArray(filter)
+    // && Object.keys(specialtyFilters).length !== filter.length
+  ) {
+    result = result.filter((_) => _.specialties.filter((v) => filter.includes(v)).length > 0);
+  }
+
+  if (filter !== undefined && !Array.isArray(filter) && isSpeciality(filter)) {
+    result = result.filter((_) => _.specialties.indexOf(filter) !== -1);
+  }
+
+  return result;
 }
 
 export async function saveCompany(company: Company): Promise<Company | undefined> {

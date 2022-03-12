@@ -11,11 +11,14 @@ import {
 } from '../../../data';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+export type ApiGetRequest = { q: string | string[] | undefined; filter: string | string[] | undefined };
+export type ApiPostRequest = { company: Partial<CompanyNewRequest> | undefined };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Company[] | Company | ErrorResponse>) {
   try {
     if (req.method === 'POST') {
-      let { company } = req.body as { company: Partial<CompanyNewRequest> | undefined };
       // Process a POST request
+      let { company } = req.body as ApiPostRequest;
       if (!isCompanyNewRequest(company)) {
         res.status(HttpStatusCode.BAD_REQUEST).json(errorResponse(`Bad request`));
         return;
@@ -32,9 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     if (req.method === 'GET') {
-      // Handle any other HTTP method
-      const { q } = req.query;
-      const companies = await getAllCompanies(q);
+      const { q, filter } = req.query as ApiGetRequest;
+      const companies = await getAllCompanies(q, filter);
       res.status(HttpStatusCode.OK).json(companies);
       return;
     }
